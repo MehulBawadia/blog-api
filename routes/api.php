@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserPostController;
 use App\Http\Controllers\Api\ManagerPostController;
 
 /*
@@ -46,5 +47,13 @@ Route::prefix('manager/posts')->group(function () {
     Route::delete('/{id}', [ManagerPostController::class, 'destroy']);
 });
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('.login');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->prefix('user/posts')->group(function () {
+    Route::get('/', [UserPostController::class, 'index']);
+    Route::post('/', [UserPostController::class, 'store']);
+    Route::get('/{slug}', [UserPostController::class, 'show']);
+    Route::put('/{id}', [UserPostController::class, 'update']);
+    Route::delete('/{id}', [UserPostController::class, 'destroy']);
+});

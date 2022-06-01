@@ -15,7 +15,7 @@ class PostRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -25,8 +25,11 @@ class PostRequest extends FormRequest
      */
     public function rules()
     {
+        $userIdValidation = auth()->user()->getRoleNames()->contains('regular-user')
+                            ? 'nullable'
+                            : 'required|integer|exists:users,id';
         return [
-            'user_id' => 'required|integer|exists:users,id',
+            'user_id' => $userIdValidation,
             'title' => 'required|max:255|unique:posts,title,'.$this->id,
             'body' => 'required|string',
         ];
