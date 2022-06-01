@@ -30,12 +30,8 @@ Route::middleware(['auth:sanctum', 'role:admin-user'])->prefix('admin')->group(f
     Route::apiResource('users', AllUserController::class);
 });
 
-Route::middleware(['auth:sanctum', 'role:manager-user'])->prefix('manager/posts')->group(function () {
-    Route::get('/', [ManagerPostController::class, 'index']);
-    Route::post('/', [ManagerPostController::class, 'store']);
-    Route::get('/{slug}', [ManagerPostController::class, 'show']);
-    Route::put('/{id}', [ManagerPostController::class, 'update']);
-    Route::delete('/{id}', [ManagerPostController::class, 'destroy']);
+Route::middleware(['auth:sanctum', 'role:manager-user'])->prefix('manager')->group(function () {
+    Route::apiResource('posts', AllPostController::class);
 });
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
