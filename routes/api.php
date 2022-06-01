@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->prefix('admin/users')->group(function () {
     Route::delete('/{id}', [UserController::class, 'destroy']);
 });
 
-Route::prefix('admin/posts')->group(function () {
+Route::middleware('auth:sanctum')->prefix('admin/posts')->group(function () {
     Route::get('/', [PostController::class, 'index']);
     Route::post('/', [PostController::class, 'store']);
     Route::get('/{slug}', [PostController::class, 'show']);
