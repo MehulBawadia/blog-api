@@ -37,10 +37,6 @@ Route::middleware(['auth:sanctum', 'role:manager-user'])->prefix('manager')->gro
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::middleware(['auth:sanctum', 'role:regular-user'])->prefix('user/posts')->group(function () {
-    Route::get('/', [UserPostController::class, 'index']);
-    Route::post('/', [UserPostController::class, 'store']);
-    Route::get('/{slug}', [UserPostController::class, 'show']);
-    Route::put('/{id}', [UserPostController::class, 'update']);
-    Route::delete('/{id}', [UserPostController::class, 'destroy']);
+Route::middleware(['auth:sanctum', 'role:regular-user'])->prefix('user')->group(function () {
+    Route::apiResource('posts', AllPostController::class);
 });
