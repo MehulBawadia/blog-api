@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\AllPostController;
+use App\Http\Controllers\Api\AllUserController;
 use App\Http\Controllers\Api\UserPostController;
 use App\Http\Controllers\Api\ManagerPostController;
 
@@ -23,20 +25,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:sanctum', 'role:admin-user'])->prefix('admin/users')->group(function () {
-    Route::get('/', [UserController::class, 'index']);
-    Route::post('/', [UserController::class, 'store']);
-    Route::get('/{id}', [UserController::class, 'show']);
-    Route::put('/{id}', [UserController::class, 'update']);
-    Route::delete('/{id}', [UserController::class, 'destroy']);
-});
-
-Route::middleware(['auth:sanctum', 'role:admin-user'])->prefix('admin/posts')->group(function () {
-    Route::get('/', [PostController::class, 'index']);
-    Route::post('/', [PostController::class, 'store']);
-    Route::get('/{slug}', [PostController::class, 'show']);
-    Route::put('/{id}', [PostController::class, 'update']);
-    Route::delete('/{id}', [PostController::class, 'destroy']);
+Route::middleware(['auth:sanctum', 'role:admin-user'])->prefix('admin')->group(function () {
+    Route::apiResource('posts', AllPostController::class);
+    Route::apiResource('users', AllUserController::class);
 });
 
 Route::middleware(['auth:sanctum', 'role:manager-user'])->prefix('manager/posts')->group(function () {

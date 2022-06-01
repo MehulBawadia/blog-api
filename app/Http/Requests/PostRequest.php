@@ -30,7 +30,7 @@ class PostRequest extends FormRequest
                             : 'required|integer|exists:users,id';
         return [
             'user_id' => $userIdValidation,
-            'title' => 'required|max:255|unique:posts,title,'.$this->id,
+            'title' => 'required|max:255|unique:posts,title,'.$this->post,
             'body' => 'required|string',
         ];
     }
