@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->prefix('admin/users')->group(function () {
+Route::middleware(['auth:sanctum', 'role:admin-user'])->prefix('admin/users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
     Route::get('/{id}', [UserController::class, 'show']);
@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->prefix('admin/users')->group(function () {
     Route::delete('/{id}', [UserController::class, 'destroy']);
 });
 
-Route::middleware('auth:sanctum')->prefix('admin/posts')->group(function () {
+Route::middleware(['auth:sanctum', 'role:admin-user'])->prefix('admin/posts')->group(function () {
     Route::get('/', [PostController::class, 'index']);
     Route::post('/', [PostController::class, 'store']);
     Route::get('/{slug}', [PostController::class, 'show']);
@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->prefix('admin/posts')->group(function () {
     Route::delete('/{id}', [PostController::class, 'destroy']);
 });
 
-Route::middleware('auth:sanctum')->prefix('manager/posts')->group(function () {
+Route::middleware(['auth:sanctum', 'role:manager-user'])->prefix('manager/posts')->group(function () {
     Route::get('/', [ManagerPostController::class, 'index']);
     Route::post('/', [ManagerPostController::class, 'store']);
     Route::get('/{slug}', [ManagerPostController::class, 'show']);
@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum')->prefix('manager/posts')->group(function () {
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->prefix('user/posts')->group(function () {
+Route::middleware(['auth:sanctum', 'role:regular-user'])->prefix('user/posts')->group(function () {
     Route::get('/', [UserPostController::class, 'index']);
     Route::post('/', [UserPostController::class, 'store']);
     Route::get('/{slug}', [UserPostController::class, 'show']);
