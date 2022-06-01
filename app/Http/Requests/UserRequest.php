@@ -26,14 +26,17 @@ class UserRequest extends FormRequest
     public function rules()
     {
         $passwordValidation = 'required|string';
+        $roleValidation = 'required|in:admin-user,manager-user,regular-user';
         if ($this->isMethod('put') || $this->isMethod('patch')) {
             $passwordValidation = 'nullable';
+            $roleValidation = 'nullable';
         }
 
         return [
             'name' => 'required|max:255',
             'email' => 'required|email:filter|unique:users,email,'. $this->id,
             'password' => $passwordValidation,
+            'role' => $roleValidation,
         ];
     }
 

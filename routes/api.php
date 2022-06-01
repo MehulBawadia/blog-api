@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('admin/users')->group(function () {
+Route::middleware('auth:sanctum')->prefix('admin/users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
     Route::get('/{id}', [UserController::class, 'show']);
@@ -47,7 +47,7 @@ Route::prefix('manager/posts')->group(function () {
     Route::delete('/{id}', [ManagerPostController::class, 'destroy']);
 });
 
-Route::post('/login', [AuthController::class, 'login'])->name('.login');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->prefix('user/posts')->group(function () {

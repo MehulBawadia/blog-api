@@ -33,6 +33,7 @@ class UserController extends Controller
     {
         $request['uuid'] = Str::uuid();
         $user = User::create($request->all());
+        $user->assignRole($request->role);
 
         return response()->json([
             'status' => 'success',
