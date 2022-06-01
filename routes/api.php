@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->prefix('admin/posts')->group(function () {
     Route::delete('/{id}', [PostController::class, 'destroy']);
 });
 
-Route::prefix('manager/posts')->group(function () {
+Route::middleware('auth:sanctum')->prefix('manager/posts')->group(function () {
     Route::get('/', [ManagerPostController::class, 'index']);
     Route::post('/', [ManagerPostController::class, 'store']);
     Route::get('/{slug}', [ManagerPostController::class, 'show']);
