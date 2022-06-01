@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ManagerPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +35,12 @@ Route::prefix('admin/posts')->group(function () {
     Route::get('/{slug}', [PostController::class, 'show']);
     Route::put('/{id}', [PostController::class, 'update']);
     Route::delete('/{id}', [PostController::class, 'destroy']);
+});
+
+Route::prefix('manager/posts')->group(function () {
+    Route::get('/', [ManagerPostController::class, 'index']);
+    Route::post('/', [ManagerPostController::class, 'store']);
+    Route::get('/{slug}', [ManagerPostController::class, 'show']);
+    Route::put('/{id}', [ManagerPostController::class, 'update']);
+    Route::delete('/{id}', [ManagerPostController::class, 'destroy']);
 });
