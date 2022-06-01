@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ManagerPostController;
@@ -44,3 +45,6 @@ Route::prefix('manager/posts')->group(function () {
     Route::put('/{id}', [ManagerPostController::class, 'update']);
     Route::delete('/{id}', [ManagerPostController::class, 'destroy']);
 });
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
