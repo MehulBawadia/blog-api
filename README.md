@@ -46,7 +46,7 @@ POST   /logout
 POST   /login
 GET    /admin/posts
 POST   /admin/posts
-GET    /admin/posts/:id
+GET    /admin/posts/:slug
 PUT    /admin/posts/:id
 DEL    /admin/posts/:id
 POST   /logout
@@ -58,7 +58,7 @@ POST   /logout
 POST   /login
 GET    /manager/posts
 POST   /manager/posts
-GET    /manager/posts/:id
+GET    /manager/posts/:slug
 PUT    /manager/posts/:id
 DEL    /manager/posts/:id
 POST   /logout
@@ -70,7 +70,7 @@ POST   /logout
 POST   /login
 GET    /user/posts
 POST   /user/posts
-GET    /user/posts/:id
+GET    /user/posts/:slug
 PUT    /user/posts/:id
 DEL    /user/posts/:id
 POST   /logout
