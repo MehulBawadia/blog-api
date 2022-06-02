@@ -11,13 +11,30 @@ use App\Http\Controllers\Controller;
 class UsersController extends Controller
 {
     /**
+     * User instance holder.
+     *
+     * @var \App\Models\User
+     */
+    private $user;
+
+    /**
+     * Instantiate the User model for further operations.
+     *
+     * @param \App\Models\User  $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * Fetch all the users.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $users = User::with('roles:id,name')->orderBy('id', 'DESC')->paginate(10);
+        $users = $this->user->with('roles:id,name')->orderBy('id', 'DESC')->paginate(10);
 
         return response()->json(['users' => $users]);
     }
@@ -31,7 +48,7 @@ class UsersController extends Controller
     public function store(UserRequest $request)
     {
         $request['uuid'] = Str::uuid();
-        $user = User::create($request->all());
+        $user = $this->user->create($request->all());
         $user->assignRole($request->role);
 
         return response()->json([
@@ -49,7 +66,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
+        $user = $this->user->find($id);
         if (! $user) {
             return response()->json([
                 'status' => 'not_found',
@@ -73,7 +90,7 @@ class UsersController extends Controller
      */
     public function update($id, UserRequest $request)
     {
-        $user = User::find($id);
+        $user = $this->user->find($id);
         if (! $user) {
             return response()->json([
                 'status' => 'not_found',
@@ -98,7 +115,7 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
+        $user = $this->user->find($id);
         if (! $user) {
             return response()->json([
                 'status' => 'not_found',

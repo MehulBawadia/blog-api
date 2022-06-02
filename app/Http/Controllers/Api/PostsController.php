@@ -11,6 +11,23 @@ use App\Http\Controllers\Controller;
 class PostsController extends Controller
 {
     /**
+     * Post instance holder.
+     *
+     * @var \App\Models\Post
+     */
+    private $post;
+
+    /**
+     * Instantiate the post model for further operations.
+     *
+     * @param \App\Models\Post  $post
+     */
+    public function __construct(Post $post)
+    {
+        $this->post = $post;
+    }
+
+    /**
      * Fetch all the posts.
      *
      * @return \App\Http\Resources\PostResource
@@ -18,9 +35,9 @@ class PostsController extends Controller
     public function index()
     {
         if (auth()->user()->getRoleNames()->contains('regular-user')) {
-            $posts = auth()->user()->posts()->orderBy('id', 'DESC')->paginate(10);
+            $posts = $this->post->where('user_id', auth()->id())->orderBy('id', 'DESC')->paginate(10);
         } else {
-            $posts = Post::orderBy('id', 'DESC')->paginate(10);
+            $posts = $this->post->orderBy('id', 'DESC')->paginate(10);
         }
 
         return response()->json(['posts' => $posts]);
@@ -41,7 +58,7 @@ class PostsController extends Controller
         } else if ($roleNames->contains('regular-user')) {
             $request['user_id'] = auth()->id();
         }
-        $post = Post::create($request->all());
+        $post = $this->post->create($request->all());
 
         return response()->json([
             'status' => 'success',
@@ -59,9 +76,9 @@ class PostsController extends Controller
     public function show($slug)
     {
         if (auth()->user()->getRoleNames()->contains('regular-user')) {
-            $post = auth()->user()->posts()->with('author:id,name,email')->where('slug', $slug)->first();
+            $post = $this->post->with('author:id,name,email')->where('user_id', auth()->id())->where('slug', $slug)->first();
         } else {
-            $post = Post::with('author:id,name,email')->where('slug', $slug)->first();
+            $post = $this->post->with('author:id,name,email')->where('slug', $slug)->first();
         }
 
         if (! $post) {
@@ -88,9 +105,9 @@ class PostsController extends Controller
     public function update($post, PostRequest $request)
     {
         if (auth()->user()->getRoleNames()->contains('regular-user')) {
-            $post = auth()->user()->posts()->find($post);
+            $post = $this->post->where('user_id', auth()->id())->find($post);
         } else {
-            $post = Post::find($post);
+            $post = $this->post->find($post);
         }
 
         if (! $post) {
@@ -118,9 +135,9 @@ class PostsController extends Controller
     public function destroy($id)
     {
         if (auth()->user()->getRoleNames()->contains('regular-user')) {
-            $post = auth()->user()->posts()->find($id);
+            $post = $this->post->where('user_id', auth()->id())->find($id);
         } else {
-            $post = Post::find($id);
+            $post = $this->post->find($id);
         }
 
         if (! $post) {
