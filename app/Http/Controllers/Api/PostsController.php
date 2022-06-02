@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PostResource;
 
 class PostsController extends Controller
 {
@@ -36,8 +35,10 @@ class PostsController extends Controller
     public function store(PostRequest $request)
     {
         $request['uuid'] = Str::uuid();
-        $request['user_id'] = $request->user_id;
-        if (auth()->user()->getRoleNames()->contains('regular-user')) {
+        $roleNames = auth()->user()->getRoleNames();
+        if ($roleNames->contains('admin-user') || $roleNames->contains('manager-user')) {
+            $request['user_id'] = $request->user_id;
+        } else if ($roleNames->contains('regular-user')) {
             $request['user_id'] = auth()->id();
         }
         $post = Post::create($request->all());

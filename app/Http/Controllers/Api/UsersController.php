@@ -7,14 +7,13 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 
 class UsersController extends Controller
 {
     /**
      * Fetch all the users.
      *
-     * @return \App\Http\Resources\UserResource
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
