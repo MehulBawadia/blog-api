@@ -9,7 +9,7 @@ use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 
-class AllUserController extends Controller
+class UsersController extends Controller
 {
     /**
      * Fetch all the users.

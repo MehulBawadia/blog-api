@@ -9,7 +9,7 @@ use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 
-class AllPostController extends Controller
+class PostsController extends Controller
 {
     /**
      * Fetch all the posts.
