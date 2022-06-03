@@ -18,6 +18,13 @@ class PostsController extends Controller
     private $post;
 
     /**
+     * Authenticated User instance holder.
+     *
+     * @var \App\Models\User
+     */
+    public $currentUser;
+
+    /**
      * Instantiate the post model for further operations.
      *
      * @param \App\Models\Post  $post
@@ -25,6 +32,11 @@ class PostsController extends Controller
     public function __construct(Post $post)
     {
         $this->post = $post;
+
+        $this->middleware(function ($request, $next) {
+            $this->currentUser = auth()->user();
+            return $next($request);
+        });
     }
 
     /**
@@ -34,7 +46,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->getRoleNames()->contains('regular-user')) {
+        if ($this->currentUser->hasRole('regular-user')) {
             $posts = $this->post->where('user_id', auth()->id())->orderBy('id', 'DESC')->paginate(10);
         } else {
             $posts = $this->post->orderBy('id', 'DESC')->paginate(10);
@@ -52,12 +64,12 @@ class PostsController extends Controller
     public function store(PostRequest $request)
     {
         $request['uuid'] = Str::uuid();
-        $roleNames = auth()->user()->getRoleNames();
-        if ($roleNames->contains('admin-user') || $roleNames->contains('manager-user')) {
+        if ($this->currentUser->hasRole('admin-user') || $this->currentUser->hasRole('manager-user')) {
             $request['user_id'] = $request->user_id;
-        } else if ($roleNames->contains('regular-user')) {
-            $request['user_id'] = auth()->id();
+        } else if ($this->currentUser->hasRole('regular-user')) {
+            $request['user_id'] = $this->currentUser->id;
         }
+
         $post = $this->post->create($request->all());
 
         return response()->json([
@@ -75,7 +87,7 @@ class PostsController extends Controller
      */
     public function show($slug)
     {
-        if (auth()->user()->getRoleNames()->contains('regular-user')) {
+        if ($this->currentUser->hasRole('regular-user')) {
             $post = $this->post->with('author:id,name,email')->where('user_id', auth()->id())->where('slug', $slug)->first();
         } else {
             $post = $this->post->with('author:id,name,email')->where('slug', $slug)->first();
@@ -104,7 +116,7 @@ class PostsController extends Controller
      */
     public function update($post, PostRequest $request)
     {
-        if (auth()->user()->getRoleNames()->contains('regular-user')) {
+        if ($this->currentUser->hasRole('regular-user')) {
             $post = $this->post->where('user_id', auth()->id())->find($post);
         } else {
             $post = $this->post->find($post);
@@ -113,7 +125,7 @@ class PostsController extends Controller
         if (! $post) {
             return response()->json([
                 'status' => 'not_found',
-                'message' => "Post with the id #{$id} not found.",
+                'message' => "Post not found.",
             ], 404);
         }
 
@@ -134,7 +146,7 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        if (auth()->user()->getRoleNames()->contains('regular-user')) {
+        if ($this->currentUser->hasRole('regular-user')) {
             $post = $this->post->where('user_id', auth()->id())->find($id);
         } else {
             $post = $this->post->find($id);
@@ -143,7 +155,7 @@ class PostsController extends Controller
         if (! $post) {
             return response()->json([
                 'status' => 'not_found',
-                'message' => "Post with the id #{$id} not found.",
+                'message' => "Post not found.",
             ], 404);
         }
 
