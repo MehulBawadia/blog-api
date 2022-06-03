@@ -46,11 +46,10 @@ class PostsController extends Controller
      */
     public function index()
     {
-        if ($this->currentUser->hasRole('regular-user')) {
-            $posts = $this->post->where('user_id', auth()->id())->orderBy('id', 'DESC')->paginate(10);
-        } else {
-            $posts = $this->post->orderBy('id', 'DESC')->paginate(10);
-        }
+        $posts = $this->post
+                ->when($this->currentUser->hasRole('regular-user'), function ($query) {
+                    $query->where('user_id', $this->currentUser->id);
+                })->orderBy('id', 'DESC')->paginate(10);
 
         return response()->json(['posts' => $posts]);
     }
@@ -87,11 +86,11 @@ class PostsController extends Controller
      */
     public function show($slug)
     {
-        if ($this->currentUser->hasRole('regular-user')) {
-            $post = $this->post->with('author:id,name,email')->where('user_id', auth()->id())->where('slug', $slug)->first();
-        } else {
-            $post = $this->post->with('author:id,name,email')->where('slug', $slug)->first();
-        }
+        $post = $this->post
+                ->with('author:id,name,email')
+                ->when($this->currentUser->hasRole('regular-user'), function ($query) {
+                    $query->where('user_id', $this->currentUser->id);
+                })->where('slug', $slug)->first();
 
         if (! $post) {
             return response()->json([
@@ -116,11 +115,10 @@ class PostsController extends Controller
      */
     public function update($post, PostRequest $request)
     {
-        if ($this->currentUser->hasRole('regular-user')) {
-            $post = $this->post->where('user_id', auth()->id())->find($post);
-        } else {
-            $post = $this->post->find($post);
-        }
+        $post = $this->post
+                ->when($this->currentUser->hasRole('regular-user'), function ($query) {
+                    $query->where('user_id', $this->currentUser->id);
+                })->find($post);
 
         if (! $post) {
             return response()->json([
@@ -146,11 +144,10 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->currentUser->hasRole('regular-user')) {
-            $post = $this->post->where('user_id', auth()->id())->find($id);
-        } else {
-            $post = $this->post->find($id);
-        }
+        $post = $this->post
+                ->when($this->currentUser->hasRole('regular-user'), function ($query) {
+                    $query->where('user_id', $this->currentUser->id);
+                })->find($id);
 
         if (! $post) {
             return response()->json([
