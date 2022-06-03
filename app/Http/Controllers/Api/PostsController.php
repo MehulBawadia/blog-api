@@ -64,7 +64,7 @@ class PostsController extends Controller
     {
         $request['uuid'] = Str::uuid();
         if ($this->currentUser->hasRole('admin-user') || $this->currentUser->hasRole('manager-user')) {
-            $request['user_id'] = $request->user_id;
+            $request['user_id'] = $request->user_id ?? $this->currentUser->id;
         } else if ($this->currentUser->hasRole('regular-user')) {
             $request['user_id'] = $this->currentUser->id;
         }

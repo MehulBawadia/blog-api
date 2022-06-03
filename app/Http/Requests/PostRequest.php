@@ -27,7 +27,7 @@ class PostRequest extends FormRequest
     {
         $userIdValidation = auth()->user()->getRoleNames()->contains('regular-user')
                             ? 'nullable'
-                            : 'required|integer|exists:users,id';
+                            : 'sometimes|required|integer|exists:users,id';
         return [
             'user_id' => $userIdValidation,
             'title' => 'required|max:255|unique:posts,title,'.$this->post,
