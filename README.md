@@ -41,37 +41,20 @@ POST   /logout
 ```
 
 ```
--- For admin performing CRUD operations on Posts
+-- For admin, manager, and regular-user performing CRUD operations on Posts
 
 POST   /login
-GET    /admin/posts
-POST   /admin/posts
-GET    /admin/posts/:slug
-PUT    /admin/posts/:id
-DEL    /admin/posts/:id
+GET    /posts
+POST   /posts
+GET    /posts/:slug
+PUT    /posts/:id
+DEL    /posts/:id
 POST   /logout
 ```
 
-```
--- For manager performing CRUD operations on Posts
+----
 
-POST   /login
-GET    /manager/posts
-POST   /manager/posts
-GET    /manager/posts/:slug
-PUT    /manager/posts/:id
-DEL    /manager/posts/:id
-POST   /logout
-```
-
-```
--- For users performing CRUD operations on their posts only
-
-POST   /login
-GET    /user/posts
-POST   /user/posts
-GET    /user/posts/:slug
-PUT    /user/posts/:id
-DEL    /user/posts/:id
-POST   /logout
-```
+### Notes
+- `admin-user` and `manager-user` can perform CRUD operations on all the posts.
+- `regular-user` can perform CRUD operations only on their posts.
+- Only `admin-user` can perform CRUD operations on users
